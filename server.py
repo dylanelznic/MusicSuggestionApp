@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g
+import sqlite3
 import os
 
 ########################
@@ -9,6 +10,26 @@ import os
 app = Flask(__name__)
 app.config.from_object('config')
 port = int(os.getenv('PORT',8000))
+
+########################
+#    SQLite Set Up     #
+########################
+
+# Path to database file
+DATABASE = 'temp_db.db'
+
+# Open database connection
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+# Close database connection
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 ########################
 #        Routes        #
