@@ -128,6 +128,24 @@ def logout():
     return redirect(url_for('login'))
 
 ########################
+#    Spotify OAuth     #
+########################
+
+@app.route("/spotify-request-auth", methods=('GET', 'POST'))
+def spotifyRequestAuth():
+
+    client_id = "a5e0fc20e60c4bf18e051c669a9c7c77"
+    redirect_uri = "http://localhost:8000/callback"
+
+    auth_url = 'https://accounts.spotify.com/authorize/?client_id=%s&response_type=code&redirect_uri=%s' % (client_id,redirect_uri)
+
+    return redirect(auth_url)
+
+@app.route("/callback", methods=('GET', 'POST'))
+def spotifyCallback():
+    return "Successful redirect."
+
+########################
 #        Routes        #
 ########################
 
@@ -138,7 +156,7 @@ def example():
     # Render the "example_template.html" template from templates/
     return render_template('example_template.html')
 
-@app.route("/")
+@app.route("/", methods=('GET','POST'))
 @login_required
 def landing():
     return render_template('landing.html')
