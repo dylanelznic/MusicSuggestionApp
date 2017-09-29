@@ -1,11 +1,14 @@
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
-from flask import Flask, render_template, g, render_template, flash, request, redirect, url_for, session
+from flask import Flask, render_template, g, render_template, flash, request, redirect, url_for, session, jsonify
 from forms import LoginForm, RegisterForm
+from flask_sqlalchemy import SQLAlchemy
+import requests
 import sqlite3
 import hashlib
+import base64
+import json
 import os
 
-from flask_sqlalchemy import SQLAlchemy
 
 ########################
 #     Flask Set Up     #
@@ -131,32 +134,79 @@ def logout():
 #    Spotify OAuth     #
 ########################
 
-@app.route("/spotify-request-auth", methods=('GET', 'POST'))
+@app.route('/spotify-request-auth', methods=('GET', 'POST'))
 def spotifyRequestAuth():
 
-    client_id = "a5e0fc20e60c4bf18e051c669a9c7c77"
-    redirect_uri = "http://localhost:8000/callback"
+    # Step 1: Request Authorization
+    client_id = 'a5e0fc20e60c4bf18e051c669a9c7c77'
+    redirect_uri = 'http://localhost:8000/callback'
+    scope = 'user-library-read'
 
-    auth_url = 'https://accounts.spotify.com/authorize/?client_id=%s&response_type=code&redirect_uri=%s' % (client_id,redirect_uri)
+    auth_url = (('https://accounts.spotify.com/authorize/?client_id=%s' +
+                                                      '&response_type=code' +
+                                                      '&redirect_uri=%s' + 
+                                                      '&scope=%s') % (client_id,redirect_uri, scope))
 
     return redirect(auth_url)
 
-@app.route("/callback", methods=('GET', 'POST'))
+@app.route('/callback', methods=('GET', 'POST'))
 def spotifyCallback():
-    return "Successful redirect."
+
+    # Step 3: User is redirected back to specified URI
+    token_url = 'https://accounts.spotify.com/api/token'
+
+    # These should be kept secret and stored securely! In future versions, we will
+    # regenerate a new client secret. This is currently very bad practice.
+    client_id = 'a5e0fc20e60c4bf18e051c669a9c7c77'
+    client_secret = 'dfe55edaa2e540b89505d5d930c99f4d'
+
+    # Encode client_id and client_secret
+    base64encoded = base64.b64encode("%s:%s" % (client_id, client_secret))
+    headers = {"Authorization": "Basic %s" % (base64encoded)}
+
+    data = {
+        'grant_type': 'authorization_code',
+        'code': str(request.args['code']),
+        'redirect_uri': 'http://localhost:8000/callback'
+    }
+
+    # Step 4: Request refresh and access tokens
+    post_request = requests.post(token_url, data=data, headers=headers)
+
+    # Step 5: Tokens are returned to application
+    response_data = json.loads(post_request.text)
+
+    access_token  = response_data['access_token']
+    refresh_token = response_data['refresh_token']
+    token_type    = response_data['token_type']
+    expires_in    = response_data['expires_in']
+
+    # Step 6: Use the access token to access the Spotify Web API
+    authorization_header = {'Authorization': 'Bearer %s' % access_token}
+
+    # END AUTHORIZTION PROCESS
+
+    # Spotify API example
+    # Get a list of the songs saved in the current Spotify user's "Your Music" library
+    get_tracks_endpoint = 'https://api.spotify.com/v1/me/tracks'
+
+    get_tracks_response = requests.get(get_tracks_endpoint, headers=authorization_header)
+    get_tracks_data = json.loads(get_tracks_response.text)
+
+    return jsonify(**get_tracks_data)
 
 ########################
 #        Routes        #
 ########################
 
 # localhost:8000/example_route
-@app.route("/example_route")
+@app.route('/example_route')
 def example():
 
     # Render the "example_template.html" template from templates/
     return render_template('example_template.html')
 
-@app.route("/", methods=('GET','POST'))
+@app.route('/', methods=('GET','POST'))
 @login_required
 def landing():
     return render_template('landing.html')
