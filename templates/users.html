@@ -5,50 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Wolfgang Admin Area</title>
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/star-rating.css">
+
+  <!-- MISSING
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/star-rating.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
 </head>
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
-      <a href="index.html" class="navbar-brand">Wolfgang</a>
+      <a href="/" class="navbar-brand">Wolfgang</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item px-2">
-            <a href="index.html" class="nav-link">Dashboard</a>
+            <a href="/" class="nav-link">Dashboard</a>
           </li>
           <li class="nav-item px-2">
-            <a href="posts.html" class="nav-link">Posts</a>
+            <a href="#" class="nav-link">Posts</a>
           </li>
           <li class="nav-item px-2">
-            <a href="categories.html" class="nav-link">Categories</a>
+            <a href="#" class="nav-link">Categories</a>
           </li>
           <li class="nav-item px-2">
-            <a href="users.html" class="nav-link active">Users</a>
+            <a href="/users" class="nav-link active">Users</a>
           </li>
         </ul>
 
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown mr-3">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-user"></i> Welcome Tommy
+              <i class="fa fa-user"></i> Welcome {{ user_username }}
             </a>
             <div class="dropdown-menu">
-              <a href="profile.html" class="dropdown-item">
+              <a href="/profile" class="dropdown-item">
                 <i class="fa fa-user-circle"></i> Profile
               </a>
-              <a href="settings.html" class="dropdown-item">
+              <a href="#" class="dropdown-item">
                 <i class="fa fa-gear"></i> Settings
               </a>
             </div>
           </li>
           <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/logout" class="nav-link">
               <i class="fa fa-user-times"></i> Logout
             </a>
           </li>
@@ -111,7 +114,7 @@
                   <td scope="row">2</td>
                   <td>T-Bone</td>
                   <td>test@test.com</td>
-                </tr>            
+                </tr>
               </tbody>
             </table>
 
@@ -140,9 +143,10 @@
     </div>
   </footer>
 
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
   <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
   <script>
       CKEDITOR.replace( 'editor1' );

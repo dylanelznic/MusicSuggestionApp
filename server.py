@@ -32,7 +32,7 @@ class Users(db.Model):
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password 
+        self.password = password
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -63,7 +63,7 @@ def register():
     form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            
+
             # Check is a user already exists within the db
             if Users.query.filter_by(username=form.username.data).first() != None:
                 flash('User "%s" already exists' % form.username.data)
@@ -78,13 +78,13 @@ def register():
                 db.session.commit()
 
                 flash('Registration successful.')
-                return redirect(url_for('landing'))
+                return redirect(url_for('index'))
 
         else:
             flash('Registration unsucessful, please check your inputs and try again.')
 
     return render_template('register.html', form=form)
-             
+
 
 # User Login
 @app.route('/login', methods=('GET', 'POST'))
@@ -100,25 +100,26 @@ def login():
             check_user = Users.query.filter_by(username=form.username.data).first()
             if check_user != None:
 
-                # Check is password hashes match 
+                # Check is password hashes match
                 if check_user.password == hashlib.sha256(form.password.data).hexdigest():
-                    
+
                     # Grab the user's id
-                    session['user_id'] = check_user.id 
+                    session['user_id'] = check_user.id
+                    session['user_username'] = check_user.username
 
                     # Log in the user
                     user = User(session['user_id'])
                     login_user(user)
 
-                    flash('Login successful.') 
-                    return redirect(url_for('landing'))
+                    flash('Login successful.')
+                    return redirect(url_for('index'))
 
                 else:
-                    flash('Username or password was incorrect.') 
+                    flash('Username or password was incorrect.')
             else:
-                flash('Username or password was incorrect.') 
+                flash('Username or password was incorrect.')
         else:
-            flash('Login unsuccessful, missing fields.') 
+            flash('Login unsuccessful, missing fields.')
 
     return render_template('login.html', form=form)
 
@@ -144,7 +145,7 @@ def spotifyRequestAuth():
 
     auth_url = (('https://accounts.spotify.com/authorize/?client_id=%s' +
                                                       '&response_type=code' +
-                                                      '&redirect_uri=%s' + 
+                                                      '&redirect_uri=%s' +
                                                       '&scope=%s') % (client_id,redirect_uri, scope))
 
     return redirect(auth_url)
@@ -208,8 +209,21 @@ def example():
 
 @app.route('/', methods=('GET','POST'))
 @login_required
-def landing():
-    return render_template('landing.html')
+def index():
+    user_username = session['user_username']
+    return render_template('index.html', user_username=user_username)
+
+@app.route('/profile', methods=('GET','POST'))
+@login_required
+def profile():
+    user_username = session['user_username']
+    return render_template('profile.html', user_username=user_username)
+
+@app.route('/users', methods=('GET','POST'))
+@login_required
+def users():
+    user_username = session['user_username']
+    return render_template('users.html', user_username=user_username)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)

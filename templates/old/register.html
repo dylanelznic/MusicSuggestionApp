@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+  </head>
+  <body>
+    <h1>Register</h1>
+    <div class="login-form-container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      {% endwith %}
+      <form method="POST" action="/register">
+        {{ form.csrf_token }}
+
+        {{ form.username.label }}<br>
+        {{ form.username }}<br>
+        {{ form.password.label }}<br>
+        {{ form.password }}<br>
+        {{ form.confirm.label }}<br>
+        {{ form.confirm }}<br>
+        <input type=submit value=Register>
+      </form>
+    </div>
+    <a href="/login"><button>< Back</button></a>
+  </body>
+</html>

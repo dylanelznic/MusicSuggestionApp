@@ -5,15 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Wolfgang Admin Area</title>
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/bootstrap.css">
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/star-rating.css">
+
+  <!-- MISSING
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/star-rating.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
 </head>
 <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
     <div class="container">
-      <a href="index.html" class="navbar-brand">Wolfgang</a>
+      <a href="/" class="navbar-brand">Wolfgang</a>
       <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -30,19 +33,19 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item dropdown mr-3">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-user"></i> Welcome Tommy
+              <i class="fa fa-user"></i> Welcome {{ user_username }}
             </a>
             <div class="dropdown-menu">
               <a href="profile.html" class="dropdown-item">
                 <i class="fa fa-user-circle"></i> Profile
               </a>
-              <a href="settings.html" class="dropdown-item">
+              <a href="#" class="dropdown-item">
                 <i class="fa fa-gear"></i> Settings
               </a>
             </div>
           </li>
           <li class="nav-item">
-            <a href="login.html" class="nav-link">
+            <a href="/logout" class="nav-link">
               <i class="fa fa-user-times"></i> Logout
             </a>
           </li>
@@ -66,7 +69,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3 mr-auto">
-          <a href="index.html" class="btn btn-light btn-block">
+          <a href="/" class="btn btn-light btn-block">
             <i class="fa fa-arrow-left"></i> Back To Rating
           </a>
         </div>
@@ -150,9 +153,10 @@
   </div>
 
 
-  <script src="js/jquery.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+  <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
   <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
   <script>
       CKEDITOR.replace( 'editor1' );

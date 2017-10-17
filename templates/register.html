@@ -1,33 +1,100 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-  </head>
-  <body>
-    <h1>Register</h1>
-    <div class="login-form-container">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-      {% endwith %}
-      <form method="POST" action="/register">
-        {{ form.csrf_token }}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Wolfgang Admin Area</title>
 
-        {{ form.username.label }}<br>
-        {{ form.username }}<br>
-        {{ form.password.label }}<br>
-        {{ form.password }}<br>
-        {{ form.confirm.label }}<br>
-        {{ form.confirm }}<br>
-        <input type=submit value=Register>
-      </form>
+  <!-- MISSING
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/star-rating.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
+    <div class="container">
+      <a href="/" class="navbar-brand">Wolfgang</a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      </div>
     </div>
-    <a href="/login"><button>< Back</button></a>
-  </body>
+  </nav>
+
+  <header id="main-header" class="py-2 bg-primary text-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1><i class="fa fa-user"></i> Wolfgang Admin</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ACTIONS -->
+  <section id="action" class="py-4 mb-4 bg-light">
+    <div class="container">
+      <div class="row">
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN -->
+  <section id="login">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+          <div class="card">
+            <div class="card-header">
+              <h4>Account Registration</h4>
+            </div>
+            <div class="card-body">
+              <form method="POST" action="/register">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                  <label for="email">{{ form.username.label }}</label>
+                  {{ form.username(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                  <label for="password">{{ form.password.label }}</label>
+                  {{ form.password(class_="form-control") }}
+                </div>
+                <div class="form-group">
+                  <label for="password">{{ form.confirm.label }}</label>
+                  {{ form.confirm(class_="form-control") }}
+                </div>
+                <input type="submit" class="btn btn-primary btn-block" value="Register">
+              </form>
+              <a href="/loging"><button class="btn btn-primary btn-block btn-register">Back</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="main-footer" class="bg-dark text-white mt-5 p-5">
+    <div class="conatiner">
+      <div class="row">
+        <div class="col">
+          <p class="lead text-center">Copyright &copy; 2017 Wolfgang</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
+  <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+
+  <script src="https://cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
+  <script>
+      CKEDITOR.replace( 'editor1' );
+  </script>
+</body>
 </html>

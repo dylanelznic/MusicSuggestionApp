@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <div class="login-form-container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+      {% endwith %}
+      <form method="POST" action="/login">
+        {{ form.csrf_token }}
+
+        {{ form.username.label }}<br>
+        {{ form.username }}<br>
+        {{ form.password.label }}<br>
+        {{ form.password }}<br>
+        <input type=submit value=Login>
+      </form>
+    </div>
+    <a href="/register"><button>Register</button></a>
+  </body>
+</html>
