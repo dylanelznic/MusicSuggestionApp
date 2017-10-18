@@ -70,7 +70,7 @@ def register():
 
             else:
                 # Rudimentary password hashing, can be replaced later if desired
-                hash_pass = hashlib.sha256(form.password.data).hexdigest()
+                hash_pass = hashlib.sha256(form.password.data.encode('utf-8')).hexdigest()
 
                 # Insert new user into the db
                 new_user = Users(form.username.data, hash_pass)
