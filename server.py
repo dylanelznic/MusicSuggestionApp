@@ -101,7 +101,7 @@ def login():
             if check_user != None:
 
                 # Check is password hashes match
-                if check_user.password == hashlib.sha256(form.password.data).hexdigest():
+                if check_user.password == hashlib.sha256(form.password.data.encode('utf-8')).hexdigest():
 
                     # Grab the user's id
                     session['user_id'] = check_user.id
