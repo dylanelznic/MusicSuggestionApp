@@ -225,5 +225,32 @@ def users():
     user_username = session['user_username']
     return render_template('users.html', user_username=user_username)
 
+@app.route('/rating', methods=('GET', 'POST'))
+def rating():
+    if request.method == 'POST':
+        print(request.data)
+
+    return redirect(url_for('index'))
+
+# @app.route('/rating_two')
+# def rating_two():
+#     print("Song 2 rated.")
+#     return redirect(url_for('index'))
+#
+# @app.route('/rating_three')
+# def rating_three():
+#     print("Song 3 rated.")
+#     return redirect(url_for('index'))
+#
+# @app.route('/rating_four')
+# def rating_four():
+#     print("Song 4 rated.")
+#     return redirect(url_for('index'))
+#
+# @app.route('/rating_five')
+# def rating_five():
+#     print("Song 5 rated.")
+#     return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port)
