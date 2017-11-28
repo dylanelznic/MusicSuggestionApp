@@ -85,14 +85,16 @@ def register():
 
     return render_template('register.html', form=form)
 
+"""
+# Change User Password
 @app.route('/changePassword', methods=('GET', 'POST'))
 def password():
 
-        
+    if request.method == 'POST':
+
         
     return redirect(url_for('logout'))
-
-
+"""
 
 # User Login
 @app.route('/login', methods=('GET', 'POST'))
@@ -225,6 +227,17 @@ def index():
 @login_required
 def profile():
     change = PasswordForm()
+
+    if request.method == 'POST':
+        if change.password.data == change.confirm.data:
+
+            temp = Users.query.filter_by(username=session['user_username']).first()
+            hash_pass = hashlib.sha256(change.password.data.encode('utf-8')).hexdigest()
+            temp.password = hash_pass
+            db.session.commit()
+            return redirect(url_for('logout'))
+
+
     user_username = session['user_username']
     return render_template('profile.html', user_username=user_username, change = change)
 
