@@ -90,7 +90,7 @@ def password():
 
         
         
-    return redirect(url_for('profile'))
+    return redirect(url_for('logout'))
 
 
 
