@@ -1,6 +1,6 @@
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask import Flask, render_template, g, render_template, flash, request, redirect, url_for, session, jsonify
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, PasswordForm
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import sqlite3
@@ -84,6 +84,14 @@ def register():
             flash('Registration unsucessful, please check your inputs and try again.')
 
     return render_template('register.html', form=form)
+
+@app.route('/changePassword', methods=('GET', 'POST'))
+def password():
+
+        
+        
+    return redirect(url_for('profile'))
+
 
 
 # User Login
@@ -216,8 +224,9 @@ def index():
 @app.route('/profile', methods=('GET','POST'))
 @login_required
 def profile():
+    change = PasswordForm()
     user_username = session['user_username']
-    return render_template('profile.html', user_username=user_username)
+    return render_template('profile.html', user_username=user_username, change = change)
 
 @app.route('/users', methods=('GET','POST'))
 @login_required

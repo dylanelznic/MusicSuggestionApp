@@ -18,3 +18,11 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
    username = StringField('Username', [validators.DataRequired()])
    password = PasswordField('Password', [validators.DataRequired()])
+
+class PasswordForm(FlaskForm):
+   password = PasswordField('Password', 
+        [validators.EqualTo('confirm', message='Passwords must match'),
+        validators.DataRequired()
+    ])
+   confirm = PasswordField('Confirm Password', [validators.DataRequired()])
+

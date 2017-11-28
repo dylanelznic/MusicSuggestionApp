@@ -586,15 +586,15 @@
         defaultCaption: '{rating} Stars',
         starCaptions: {
             0.5: 'Half Star',
-            1: '1 Stars',
+            1: ' 1 Stars ',
             1.5: 'One & Half Star',
-            2: '2 Stars',
+            2: ' 2 Stars ',
             2.5: 'Two & Half Stars',
-            3: '3 Stars',
+            3: ' 3 Stars ',
             3.5: 'Three & Half Stars',
-            4: '4 Stars',
+            4: ' 4 Stars ',
             4.5: 'Four & Half Stars',
-            5: '5 Stars'
+            5: ' 5 Stars '
         },
         clearButtonTitle: 'Clear',
         clearCaption: 'No Rating'
