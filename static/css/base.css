@@ -10,3 +10,13 @@ html, body {
 .btn-register {
   margin-top: 10px;
 }
+
+.animated {
+    animation-name: backgroundTransition;
+    animation-duration: 1100ms;
+}
+
+@keyframes backgroundTransition {
+    from { background-color: #d8e9ff; }
+    to { background-color: white; }
+}
