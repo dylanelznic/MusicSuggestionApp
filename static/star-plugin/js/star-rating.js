@@ -335,7 +335,7 @@
                             console.log(error);
                           });
 
-                          setTimeout(function(){$('#' + self.$element.context.id).rating('reset');}, 750)
+                          setTimeout(function(){$('#' + self.$element.context.id).rating('reset');}, 550)
                     });
                 },
                 clearClick: function (e) {
