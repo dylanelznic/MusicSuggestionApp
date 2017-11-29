@@ -9,6 +9,7 @@ import base64
 import json
 import os
 
+import random
 
 ########################
 #     Flask Set Up     #
@@ -92,7 +93,7 @@ def password():
 
     if request.method == 'POST':
 
-        
+
     return redirect(url_for('logout'))
 """
 
@@ -221,6 +222,7 @@ def example():
 @login_required
 def index():
     user_username = session['user_username']
+    test = 'test'
     return render_template('index.html', user_username=user_username)
 
 @app.route('/profile', methods=('GET','POST'))
@@ -253,6 +255,18 @@ def rating():
         print(request.data)
 
     return redirect(url_for('index'))
+
+@app.route('/test', methods=('GET', 'POST'))
+def test():
+
+    song_json = {}
+    song_json['band'] = ('Band %s' % random.randint(0,9))
+    song_json['song'] = ('Song %s' % random.randint(0,9))
+    song_json['album'] = ('Album %s' % random.randint(0,9))
+
+    song_json = json.dumps(song_json)
+
+    return song_json
 
 # @app.route('/rating_two')
 # def rating_two():

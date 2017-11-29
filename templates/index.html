@@ -11,7 +11,6 @@
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/star-rating.css') }}">
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
 
       <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
       <link href="{{ url_for('static', filename='star-plugin/css/star-rating.css') }}" media="all" rel="stylesheet" type="text/css" />
@@ -26,8 +25,11 @@
       <script src="{{ url_for('static', filename='star-plugin/themes/krajee-svg/theme.js') }}"></script>
 
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
+
     </head>
-    <body>s
+    <body>
       <nav class="navbar navbar-expand-sm navbar-dark bg-dark p-0">
         <div class="container">
           <a href="/" class="navbar-brand">Wolfgang</a>
@@ -99,38 +101,38 @@
                   <tbody>
                     <tr>
                       <td scope="row">1</td>
-                      <td>Band One</td>
-                      <td>Song 1</td>
-                      <td>Album Name</td>
+                      <td id="band-1"></td>
+                      <td id="song-1"></td>
+                      <td id="album-1"></td>
                       <td><input id="input-1-xs" name="song-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
                     </tr>
                     <tr>
                       <td scope="row">2</td>
-                      <td>Band Two</td>
-                      <td>Song 2</td>
-                      <td>Album Name</td>
-                      <td><input id="input-1-xs" name="song-2" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
+                      <td id="band-2"></td>
+                      <td id="song-2"></td>
+                      <td id="album-2"></td>
+                      <td><input id="input-2-xs" name="song-2" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
                     </tr>
                     <tr>
                       <td scope="row">3</td>
-                      <td>Band Three</td>
-                      <td>Song 3</td>
-                      <td>Album Name</td>
-                      <td><input id="input-1-xs" name="song-3" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
+                      <td id="band-3"></td>
+                      <td id="song-3"></td>
+                      <td id="album-3"></td>
+                      <td><input id="input-3-xs" name="song-3" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
                     </tr>
                     <tr>
                       <td scope="row">4</td>
-                      <td>Band Four</td>
-                      <td>Song 4</td>
-                      <td>Album Name</td>
-                      <td><input id="input-1-xs" name="song-4" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
+                      <td id="band-4"></td>
+                      <td id="song-4"></td>
+                      <td id="album-4"></td>
+                      <td><input id="input-4-xs" name="song-4" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
                     </tr>
                     <tr>
                       <td scope="row">5</td>
-                      <td>Band Five</td>
-                      <td>Song 5</td>
-                      <td>Album Name</td>
-                      <td><input id="input-1-xs" name="song-5" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
+                      <td id="band-5"></td>
+                      <td id="song-5"></td>
+                      <td id="album-5"></td>
+                      <td><input id="input-5-xs" name="song-5" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs"></td>
                     </tr>
                   </tbody>
                 </table>
@@ -139,6 +141,60 @@
           </div>
         </div>
       </section>
+
+      <script>
+        $('#input-1-xs').on('rating:change', function(event, value) {
+            setTimeout(function(){
+                axios.get('/test')
+                  .then(function (response) {
+                    $('#band-1').html(response.data.band);
+                    $('#song-1').html(response.data.song);
+                    $('#album-1').html(response.data.album);
+                  });
+            }, 500);
+        });
+        $('#input-2-xs').on('rating:change', function(event, value) {
+          axios.get('/test')
+          setTimeout(function(){
+              axios.get('/test')
+                .then(function (response) {
+                  $('#band-2').html(response.data.band);
+                  $('#song-2').html(response.data.song);
+                  $('#album-2').html(response.data.album);
+                });
+          }, 500);
+        });
+        $('#input-3-xs').on('rating:change', function(event, value) {
+            setTimeout(function(){
+                axios.get('/test')
+                  .then(function (response) {
+                    $('#band-3').html(response.data.band);
+                    $('#song-3').html(response.data.song);
+                    $('#album-3').html(response.data.album);
+                  });
+            }, 500);
+        });
+        $('#input-4-xs').on('rating:change', function(event, value) {
+            setTimeout(function(){
+                axios.get('/test')
+                  .then(function (response) {
+                    $('#band-4').html(response.data.band);
+                    $('#song-4').html(response.data.song);
+                    $('#album-4').html(response.data.album);
+                  });
+            }, 500);
+        });
+        $('#input-5-xs').on('rating:change', function(event, value) {
+            setTimeout(function(){
+                axios.get('/test')
+                  .then(function (response) {
+                    $('#band-5').html(response.data.band);
+                    $('#song-5').html(response.data.song);
+                    $('#album-5').html(response.data.album);
+                  });
+            }, 500);
+        });
+      </script>
 
       <footer id="main-footer" class="navbar navbar-fixed-bottom bg-dark text-white mt-5 p-5">
         <div class="conatiner">

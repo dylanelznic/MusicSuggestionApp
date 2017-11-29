@@ -329,11 +329,13 @@
                             rating: self.$element.val()
                           })
                           .then(function (response) {
-                            console.log(response);
+                            //console.log(response);
                           })
                           .catch(function (error) {
                             console.log(error);
                           });
+
+                          setTimeout(function(){$('#' + self.$element.context.id).rating('reset');}, 500)
                     });
                 },
                 clearClick: function (e) {
