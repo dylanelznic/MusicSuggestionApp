@@ -142,6 +142,18 @@ def logout():
     flash('Logged out successfully.')
     return redirect(url_for('login'))
 
+# Delete User Account
+@app.route('/delete-account', methods=('GET','POST'))
+@login_required
+def deleteAccount():
+
+    if request.method == 'POST':
+        user = Users.query.filter_by(username=session['user_username']).first()
+        db.session.delete(user)
+        db.session.commit()
+
+    return redirect(url_for('logout'))
+
 ########################
 #    Spotify OAuth     #
 ########################

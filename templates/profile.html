@@ -79,7 +79,7 @@
           </a>
         </div>
         <div class="col-md-3">
-          <a href="#" class="btn btn-danger btn-block">
+          <a href="#" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteModal">
             <i class="fa fa-remove"></i> Delete Account
           </a>
         </div>
@@ -114,11 +114,11 @@
     </div>
   </section>
 
-  <footer id="main-footer" class="bg-dark text-white mt-5 p-5">
+  <footer id="main-footer" class="navbar fixed-bottom bg-dark text-white mt-5 p-5">
     <div class="conatiner">
       <div class="row">
         <div class="col">
-          <p class="lead text-center">Copyright &copy; 2117 Wolfgang</p>
+          <p class="lead text-center">Copyright &copy; 2017 Wolfgang</p>
         </div>
       </div>
     </div>
@@ -140,7 +140,7 @@
               {{change.password}}
             </div>
             <div class="form-group">
-              <label for="name">{{change.confirm.label}}</label><br></br>            
+              <label for="name">{{change.confirm.label}}</label><br></br>
               {{change.confirm}}
             </div>
             <input type="submit" class="btn btn-primary" value="Update Password"/>
@@ -153,6 +153,26 @@
     </div>
   </div>
 
+  <!-- DELETE MODAL -->
+  <div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Delete Account</h5>
+          <button class="close" data-dismiss="modal"><span>&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="/delete-account">
+            <p>Are you sure you want to delete your account?</p>
+            <input type="submit" class="btn btn-primary" value="Delete Account"/>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
   <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
