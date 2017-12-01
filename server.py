@@ -1,6 +1,6 @@
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from flask import Flask, render_template, g, render_template, flash, request, redirect, url_for, session, jsonify
-from forms import LoginForm, RegisterForm, PasswordForm
+from forms import LoginForm, RegisterForm, PasswordForm, UpdateProfileForm
 from flask_sqlalchemy import SQLAlchemy
 import requests
 import sqlite3
@@ -30,6 +30,8 @@ class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True)
     password = db.Column(db.String(120))
+    name = db.Column(db.String(120))
+    email = db.Column(db.String(120), unique=True)
 
     def __init__(self, username, password):
         self.username = username
@@ -86,17 +88,6 @@ def register():
 
     return render_template('register.html', form=form)
 
-"""
-# Change User Password
-@app.route('/changePassword', methods=('GET', 'POST'))
-def password():
-
-    if request.method == 'POST':
-
-
-    return redirect(url_for('logout'))
-"""
-
 # User Login
 @app.route('/login', methods=('GET', 'POST'))
 def login():
@@ -140,6 +131,7 @@ def login():
 def logout():
     logout_user()
     flash('Logged out successfully.')
+
     return redirect(url_for('login'))
 
 # Delete User Account
@@ -241,8 +233,10 @@ def index():
 @login_required
 def profile():
     change = PasswordForm()
+    update_profile = UpdateProfileForm()
 
-    if request.method == 'POST':
+    # Change Password form
+    if request.method == 'POST' and request.form['form-check'] == 'Change Password':
         if change.password.data == change.confirm.data:
 
             temp = Users.query.filter_by(username=session['user_username']).first()
@@ -251,9 +245,24 @@ def profile():
             db.session.commit()
             return redirect(url_for('logout'))
 
+    # Update Profile form
+    if request.method == 'POST' and request.form['form-check'] == 'Update Profile':
+        name = update_profile.name.data
+        email = update_profile.email.data
 
+        user = Users.query.filter_by(username=session['user_username']).first()
+        user.name = name
+        user.email = email
+        db.session.commit()
+        return redirect(url_for('profile'))
+
+    user = Users.query.filter_by(username=session['user_username']).first()
     user_username = session['user_username']
-    return render_template('profile.html', user_username=user_username, change = change)
+    name = user.name
+    email = user.email
+
+    return render_template('profile.html', user_username=user_username, change=change,
+                           update_profile=update_profile, name=name, email=email)
 
 @app.route('/users', methods=('GET','POST'))
 @login_required
