@@ -54,6 +54,15 @@
               <h4>Account Registration</h4>
             </div>
             <div class="card-body">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <ul class=flashes style="padding-left: 0;">
+                    {% for message in messages %}
+                      <li style="list-style: none;color: red;">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
               <form method="POST" action="/register">
                 {{ form.csrf_token }}
                 <div class="form-group">

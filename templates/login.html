@@ -54,6 +54,19 @@
               <h4>Account Login</h4>
             </div>
             <div class="card-body">
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <ul class=flashes style="padding-left: 0;">
+                    {% for message in messages %}
+                        {% if message == 'Registration Successful' %}
+                          <li style="list-style: none;color: green;">{{ message }}</li>
+                        {% else %}
+                          <li style="list-style: none;color: red;">{{ message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
               <form method="POST" action="/login">
                 {{ form.csrf_token }}
                 <div class="form-group">

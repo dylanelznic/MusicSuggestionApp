@@ -80,11 +80,14 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
 
-                flash('Registration successful.')
-                return redirect(url_for('index'))
+                flash('Registration successful')
+                return redirect(url_for('login'))
 
         else:
-            flash('Registration unsucessful, please check your inputs and try again.')
+            if form.password.data != form.confirm.data:
+                flash('Password fields do not match')
+            else:
+                flash('Registration unsucessful, please check your inputs and try again')
 
     return render_template('register.html', form=form)
 
@@ -113,15 +116,14 @@ def login():
                     user = User(session['user_id'])
                     login_user(user)
 
-                    flash('Login successful.')
                     return redirect(url_for('index'))
 
                 else:
-                    flash('Username or password was incorrect.')
+                    flash('Username or password was incorrect')
             else:
-                flash('Username or password was incorrect.')
+                flash('Username or password was incorrect')
         else:
-            flash('Login unsuccessful, missing fields.')
+            flash('Login unsuccessful, missing fields')
 
     return render_template('login.html', form=form)
 
@@ -130,7 +132,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    flash('Logged out successfully.')
 
     return redirect(url_for('login'))
 
