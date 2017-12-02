@@ -4,7 +4,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <title>Wolfgang Admin Area</title>
+      <title>Wolfgang | Music Suggestions</title>
 
       <!-- MISSING
       <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">-->
@@ -39,9 +39,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
               <ul class="navbar-nav">
                 <li class="nav-item px-2">
-                  <a href="/index" class="nav-link active">Song Finder</a>
+                  <a href="/" class="nav-link active">Song Finder</a>
                 <li class="nav-item px-2">
-                  <a href="/#" class="nav-link">Rated Songs</a>
+                  <a href="/rated-songs" class="nav-link">Rated Songs</a>
                 </li>
               </ul>
 
@@ -79,16 +79,29 @@
         </div>
       </header>
 
+      <!-- ACTIONS -->
+      <section id="action" class="bg-light index-action">
+        <div class="container">
+          <div class="row">
+
+          </div>
+        </div>
+      </section>
+
       <!-- POSTS -->
       <section id="posts">
         <div class="container">
           <div class="row">
-            <div class="col-md-9">
-              <div class="card">
+            <div class="col-md-10">
+              <div class="card song-suggestions">
                 <div class="card-header">
                   <h4>Song Suggestions</h4>
                 </div>
                 <table class="table table-striped">
+                  <col width="40px;">
+                  <col width="180px;">
+                  <col width="180px;">
+                  <col width="180px;">
                   <thead class="thead-inverse">
                     <tr>
                       <th>#</th>

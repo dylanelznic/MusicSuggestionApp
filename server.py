@@ -265,18 +265,18 @@ def profile():
     return render_template('profile.html', user_username=user_username, change=change,
                            update_profile=update_profile, name=name, email=email)
 
-@app.route('/users', methods=('GET','POST'))
-@login_required
-def users():
-    user_username = session['user_username']
-    return render_template('users.html', user_username=user_username)
-
 @app.route('/rating', methods=('GET', 'POST'))
 def rating():
     if request.method == 'POST':
         print(request.data)
 
     return redirect(url_for('index'))
+
+@app.route('/rated-songs', methods=('GET','POST'))
+@login_required
+def ratedSongs():
+    user_username = session['user_username']
+    return render_template('rated_songs.html', user_username=user_username)
 
 @app.route('/test', methods=('GET', 'POST'))
 def test():
@@ -289,6 +289,12 @@ def test():
     song_json = json.dumps(song_json)
 
     return song_json
+
+@app.route('/users', methods=('GET','POST'))
+@login_required
+def users():
+    user_username = session['user_username']
+    return render_template('users.html', user_username=user_username)
 
 # @app.route('/rating_two')
 # def rating_two():
