@@ -40,6 +40,22 @@ class Users(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+# Schema could be 1000x better, but trying to keep it stupidly simple
+class RatedSongs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20))
+    band = db.Column(db.String(120))
+    song = db.Column(db.String(120))
+    album = db.Column(db.String(120))
+    rating = db.Column(db.Integer)
+
+    def __init__(self, username, band, song, album, rating):
+        self.username = username
+        self.band = band
+        self.song = song
+        self.album = album
+        self.rating = rating
+
 ########################
 #      User Login      #
 ########################
@@ -80,7 +96,7 @@ def register():
                 db.session.add(new_user)
                 db.session.commit()
 
-                flash('Registration successful')
+                flash('Registration Successful')
                 return redirect(url_for('login'))
 
         else:
@@ -132,6 +148,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session.clear()
 
     return redirect(url_for('login'))
 
@@ -227,8 +244,20 @@ def example():
 @login_required
 def index():
     user_username = session['user_username']
-    test = 'test'
-    return render_template('index.html', user_username=user_username)
+
+    # TO-DO Use real data
+    # If no session['song-x'] exists, initialize defaults
+    if 'song-1' not in session:
+        session['song-1'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+        session['song-2'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+        session['song-3'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+        session['song-4'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+        session['song-5'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+
+    return render_template('index.html', user_username=user_username,
+                           song_1=session['song-1'], song_2=session['song-2'],
+                           song_3=session['song-3'], song_4=session['song-4'],
+                           song_5=session['song-5'])
 
 @app.route('/profile', methods=('GET','POST'))
 @login_required
@@ -268,27 +297,56 @@ def profile():
 @app.route('/rating', methods=('GET', 'POST'))
 def rating():
     if request.method == 'POST':
-        print(request.data)
+
+        # request.data is in the form {'song':'song-1','rating':'4'}
+        rating_data = json.loads(request.data)
+        song_data = session[rating_data['song']]
+
+        # Insert into user's rated songs
+        rated_song = RatedSongs(session['user_username'], song_data['band'],
+                                song_data['song'], song_data['album'],
+                                rating_data['rating'])
+        db.session.add(rated_song)
+        db.session.commit()
+
+        # TO-DO! Give this value to the ML algorithm
 
     return redirect(url_for('index'))
 
-@app.route('/rated-songs', methods=('GET','POST'))
-@login_required
-def ratedSongs():
-    user_username = session['user_username']
-    return render_template('rated_songs.html', user_username=user_username)
+@app.route('/new_song', methods=('GET', 'POST'))
+def newSong():
 
-@app.route('/test', methods=('GET', 'POST'))
-def test():
+    # TO-DO! These are currently dummy values
+    # We need to pull real songs
 
+    # Retrieve new song to be rated from ML algorithm
+    # Build a string json out of the data
     song_json = {}
     song_json['band'] = ('Band %s' % random.randint(0,9))
     song_json['song'] = ('Song %s' % random.randint(0,9))
     song_json['album'] = ('Album %s' % random.randint(0,9))
 
+    # Store song to session
+    song_num = request.args['song_num']
+    session['song-%s' % song_num] = song_json
+
+    # Convert to json object for axios request
     song_json = json.dumps(song_json)
 
     return song_json
+
+@app.route('/rated-songs', methods=('GET','POST'))
+@login_required
+def ratedSongs():
+    user_username = session['user_username']
+
+    rated_songs_data = RatedSongs.query.filter_by(username=session['user_username'])
+    rated_songs = []
+    for song in rated_songs_data:
+        rated_songs.append(song)
+
+    return render_template('rated_songs.html', user_username=user_username,
+                           rated_songs=rated_songs)
 
 @app.route('/users', methods=('GET','POST'))
 @login_required

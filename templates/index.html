@@ -116,37 +116,37 @@
                   <tbody>
                     <tr id="animate-green-1">
                       <td scope="row">1</td>
-                      <td id="band-1"></td>
-                      <td id="song-1"></td>
-                      <td id="album-1"></td>
+                      <td id="band-1">{{ song_1['band'] }}</td>
+                      <td id="song-1">{{ song_1['song'] }}</td>
+                      <td id="album-1">{{ song_1['album'] }}</td>
                       <td><input id="input-1-xs" name="song-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs" onchange='animateGreenOne()'></td>
                     </tr>
                     <tr id="animate-green-2">
                       <td scope="row">2</td>
-                      <td id="band-2"></td>
-                      <td id="song-2"></td>
-                      <td id="album-2"></td>
+                      <td id="band-2">{{ song_2['band'] }}</td>
+                      <td id="song-2">{{ song_2['song'] }}</td>
+                      <td id="album-2">{{ song_2['album'] }}</td>
                       <td><input id="input-2-xs" name="song-2" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs" onchange='animateGreenTwo()'></td>
                     </tr>
                     <tr id="animate-green-3">
                       <td scope="row">3</td>
-                      <td id="band-3"></td>
-                      <td id="song-3"></td>
-                      <td id="album-3"></td>
+                      <td id="band-3">{{ song_3['band'] }}</td>
+                      <td id="song-3">{{ song_3['song'] }}</td>
+                      <td id="album-3">{{ song_3['album'] }}</td>
                       <td><input id="input-3-xs" name="song-3" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs" onchange='animateGreenThree()'></td>
                     </tr>
                     <tr id="animate-green-4">
                       <td scope="row">4</td>
-                      <td id="band-4"></td>
-                      <td id="song-4"></td>
-                      <td id="album-4"></td>
+                      <td id="band-4">{{ song_4['band'] }}</td>
+                      <td id="song-4">{{ song_4['song'] }}</td>
+                      <td id="album-4">{{ song_4['album'] }}</td>
                       <td><input id="input-4-xs" name="song-4" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs" onchange='animateGreenFour()'></td>
                     </tr>
                     <tr id="animate-green-5">
                       <td scope="row">5</td>
-                      <td id="band-5"></td>
-                      <td id="song-5"></td>
-                      <td id="album-5"></td>
+                      <td id="band-5">{{ song_5['band'] }}</td>
+                      <td id="song-5">{{ song_5['song'] }}</td>
+                      <td id="album-5">{{ song_5['album'] }}</td>
                       <td><input id="input-5-xs" name="song-5" class="rating rating-loading" data-min="0" data-max="5" data-step="1" data-size="xs" onchange='animateGreenFive()'></td>
                     </tr>
                   </tbody>
@@ -208,7 +208,11 @@
       <script>
         $('#input-1-xs').on('rating:change', function(event, value) {
             setTimeout(function(){
-                axios.get('/test')
+                axios.get('/new_song', {
+                    params: {
+                        song_num: 1
+                    }
+                })
                   .then(function (response) {
                     $('#band-1').html(response.data.band);
                     $('#song-1').html(response.data.song);
@@ -217,9 +221,12 @@
             }, 750);
         });
         $('#input-2-xs').on('rating:change', function(event, value) {
-          axios.get('/test')
           setTimeout(function(){
-              axios.get('/test')
+              axios.get('/new_song', {
+                  params: {
+                      song_num: 2
+                  }
+              })
                 .then(function (response) {
                   $('#band-2').html(response.data.band);
                   $('#song-2').html(response.data.song);
@@ -229,7 +236,11 @@
         });
         $('#input-3-xs').on('rating:change', function(event, value) {
             setTimeout(function(){
-                axios.get('/test')
+                axios.get('/new_song', {
+                    params: {
+                        song_num: 3
+                    }
+                })
                   .then(function (response) {
                     $('#band-3').html(response.data.band);
                     $('#song-3').html(response.data.song);
@@ -239,7 +250,11 @@
         });
         $('#input-4-xs').on('rating:change', function(event, value) {
             setTimeout(function(){
-                axios.get('/test')
+                axios.get('/new_song', {
+                    params: {
+                        song_num: 4
+                    }
+                })
                   .then(function (response) {
                     $('#band-4').html(response.data.band);
                     $('#song-4').html(response.data.song);
@@ -249,7 +264,11 @@
         });
         $('#input-5-xs').on('rating:change', function(event, value) {
             setTimeout(function(){
-                axios.get('/test')
+                axios.get('/new_song', {
+                    params: {
+                        song_num: 5
+                    }
+                })
                   .then(function (response) {
                     $('#band-5').html(response.data.band);
                     $('#song-5').html(response.data.song);

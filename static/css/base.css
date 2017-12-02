@@ -22,6 +22,11 @@ html, body {
     to { background-color: white; }
 }
 
+.rated-songs {
+    height: 599px;
+    overflow: auto;
+}
+
 /* Bootstrap Fix */
 .navbar {
     margin: 0;
