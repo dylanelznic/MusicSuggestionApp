@@ -40,7 +40,29 @@ class Users(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-# Schema could be 1000x better, but trying to keep it stupidly simple
+class Songs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    band = db.Column(db.String(120))
+    song = db.Column(db.String(120))
+    album = db.Column(db.String(120))
+
+    def __init__(self, band, song, album):
+        self.band = band
+        self.song = song
+        self.album = album
+
+class Ratings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    uid = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    sid = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
+    rating = db.Column(db.Integer)
+
+    def __init__(self, uid, sid, rating):
+        self.uid = uid
+        self.sid = sid
+        self.rating = rating
+
+
 class RatedSongs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20))
@@ -245,14 +267,25 @@ def example():
 def index():
     user_username = session['user_username']
 
-    # TO-DO Use real data
     # If no session['song-x'] exists, initialize defaults
     if 'song-1' not in session:
-        session['song-1'] = {'band':'default band', 'song':'default song', 'album':'default album'}
-        session['song-2'] = {'band':'default band', 'song':'default song', 'album':'default album'}
-        session['song-3'] = {'band':'default band', 'song':'default song', 'album':'default album'}
-        session['song-4'] = {'band':'default band', 'song':'default song', 'album':'default album'}
-        session['song-5'] = {'band':'default band', 'song':'default song', 'album':'default album'}
+        # Pull highest rated suggestion for current user
+        user_id = Users.query.filter_by(username=session['user_username']).first()
+        rating_data = Ratings.query.filter_by(uid=user_id.id).order_by(Ratings.rating)
+
+        count = 1
+        for rating in rating_data:
+            new_song_data = Songs.query.filter_by(id=rating.sid).first()
+            print('song-%s' % count)
+            session[('song-%s' % count)] = {'id': new_song_data.id,
+                                            'band': new_song_data.band,
+                                            'song': new_song_data.song,
+                                            'album': new_song_data.album}
+            count +=1
+            db.session.delete(rating)
+            if count > 5:
+                break
+        db.session.commit()
 
     return render_template('index.html', user_username=user_username,
                            song_1=session['song-1'], song_2=session['song-2'],
@@ -297,7 +330,6 @@ def profile():
 @app.route('/rating', methods=('GET', 'POST'))
 def rating():
     if request.method == 'POST':
-
         # request.data is in the form {'song':'song-1','rating':'4'}
         rating_data = json.loads(request.data)
         song_data = session[rating_data['song']]
@@ -309,22 +341,23 @@ def rating():
         db.session.add(rated_song)
         db.session.commit()
 
-        # TO-DO! Give this value to the ML algorithm
-
     return redirect(url_for('index'))
 
 @app.route('/new_song', methods=('GET', 'POST'))
 def newSong():
 
-    # TO-DO! These are currently dummy values
-    # We need to pull real songs
+    # Pull highest rated suggestion for current user
+    user_id = Users.query.filter_by(username=session['user_username']).first()
+    rating_data = Ratings.query.filter_by(uid=user_id.id).order_by(Ratings.rating).first()
+    new_song_data = Songs.query.filter_by(id=rating_data.sid).first()
 
     # Retrieve new song to be rated from ML algorithm
     # Build a string json out of the data
     song_json = {}
-    song_json['band'] = ('Band %s' % random.randint(0,9))
-    song_json['song'] = ('Song %s' % random.randint(0,9))
-    song_json['album'] = ('Album %s' % random.randint(0,9))
+    song_json['id'] = (new_song_data.id)
+    song_json['band'] = (str(new_song_data.band))
+    song_json['song'] = (new_song_data.song)
+    song_json['album'] = (str(new_song_data.album))
 
     # Store song to session
     song_num = request.args['song_num']
@@ -332,6 +365,9 @@ def newSong():
 
     # Convert to json object for axios request
     song_json = json.dumps(song_json)
+
+    db.session.delete(rating_data)
+    db.session.commit()
 
     return song_json
 
@@ -353,6 +389,33 @@ def ratedSongs():
 def users():
     user_username = session['user_username']
     return render_template('users.html', user_username=user_username)
+
+@app.route('/populate_db', methods=('GET', 'POST'))
+def populateDb():
+    # User Creation
+    for i in range(1,21):
+        hash_pass = hashlib.sha256('password'.encode('utf-8')).hexdigest()
+        new_user = Users(('user_%s' % i), hash_pass)
+        db.session.add(new_user)
+        print('user_%s' % i)
+    db.session.commit()
+
+    # Song Creation
+    for i in range(1,300001):
+        new_song = Songs(None, ('song_%s' % i), None)
+        db.session.add(new_song)
+        print('song_%s' % i)
+    db.session.commit()
+
+    # Read in algorithm output
+    for line in open("top_25_ratings_for_20_users.csv"):
+        csv_row = line.split() #returns a list ["1","50","60"]
+        new_suggestion = Ratings(csv_row[0], csv_row[1], csv_row[2])
+        db.session.add(new_suggestion)
+        print(csv_row)
+    db.session.commit()
+
+    return "dasf"
 
 # @app.route('/rating_two')
 # def rating_two():
