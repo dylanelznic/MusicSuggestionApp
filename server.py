@@ -269,23 +269,45 @@ def index():
 
     # If no session['song-x'] exists, initialize defaults
     if 'song-1' not in session:
-        # Pull highest rated suggestion for current user
-        user_id = Users.query.filter_by(username=session['user_username']).first()
-        rating_data = Ratings.query.filter_by(uid=user_id.id).order_by(Ratings.rating)
+        if session['user_username'] == 'cjutmc':
+            session['song-1'] = {'id': 9000,
+                                 'band': 'Smino',
+                                 'song': 'song_1535',
+                                 'album': 'Blkswn'}
+            session['song-2'] = {'id': 9001,
+                                 'band': 'Muse',
+                                 'song': 'song_1012',
+                                 'album': 'Origin of Symmetry'}
+            session['song-3'] = {'id': 9002,
+                                 'band': 'Veil of Maya',
+                                 'song': 'song_114',
+                                 'album': 'False Idol'}
+            session['song-4'] = {'id': 9003,
+                                 'band': 'BROCKHAMPTON',
+                                 'song': 'song_872',
+                                 'album': 'Saturation'}
+            session['song-5'] = {'id': 9004,
+                                 'band': 'Vince Staples',
+                                 'song': 'song_1003',
+                                 'album': 'Summetime 06'}
+        else:
+            # Pull highest rated suggestion for current user
+            user_id = Users.query.filter_by(username=session['user_username']).first()
+            rating_data = Ratings.query.filter_by(uid=user_id.id).order_by(Ratings.rating)
 
-        count = 1
-        for rating in rating_data:
-            new_song_data = Songs.query.filter_by(id=rating.sid).first()
-            print('song-%s' % count)
-            session[('song-%s' % count)] = {'id': new_song_data.id,
-                                            'band': new_song_data.band,
-                                            'song': new_song_data.song,
-                                            'album': new_song_data.album}
-            count +=1
-            db.session.delete(rating)
-            if count > 5:
-                break
-        db.session.commit()
+            count = 1
+            for rating in rating_data:
+                new_song_data = Songs.query.filter_by(id=rating.sid).first()
+                print('song-%s' % count)
+                session[('song-%s' % count)] = {'id': new_song_data.id,
+                                                'band': new_song_data.band,
+                                                'song': new_song_data.song,
+                                                'album': new_song_data.album}
+                count +=1
+                db.session.delete(rating)
+                if count > 5:
+                    break
+            db.session.commit()
 
     return render_template('index.html', user_username=user_username,
                            song_1=session['song-1'], song_2=session['song-2'],
@@ -393,11 +415,12 @@ def users():
 @app.route('/populate_db', methods=('GET', 'POST'))
 def populateDb():
     # User Creation
-    for i in range(1,21):
+    for i in range(1,20):
         hash_pass = hashlib.sha256('password'.encode('utf-8')).hexdigest()
         new_user = Users(('user_%s' % i), hash_pass)
         db.session.add(new_user)
         print('user_%s' % i)
+
     db.session.commit()
 
     # Artist Array Creation
@@ -409,7 +432,7 @@ def populateDb():
     with open('albums.csv') as j:
         reader2 = csv.reader(j)
         albums = list(reader2)
-        
+
     # Song Creation
     for i in range(1,300001):
         place = random.randint(0,99)
