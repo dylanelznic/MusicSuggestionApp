@@ -7,8 +7,8 @@ import sqlite3
 import hashlib
 import base64
 import json
+import csv
 import os
-
 import random
 
 ########################
@@ -400,9 +400,20 @@ def populateDb():
         print('user_%s' % i)
     db.session.commit()
 
+    # Artist Array Creation
+    artists = []
+    albums = []
+    with open('artist.csv') as f:
+        reader = csv.reader(f)
+        artists = list(reader)
+    with open('albums.csv') as j:
+        reader2 = csv.reader(j)
+        albums = list(reader2)
+        
     # Song Creation
     for i in range(1,300001):
-        new_song = Songs(None, ('song_%s' % i), None)
+        place = random.randint(0,99)
+        new_song = Songs(artists[place][0], ('song_%s' % i), albums[place][0])
         db.session.add(new_song)
         print('song_%s' % i)
     db.session.commit()
@@ -414,6 +425,8 @@ def populateDb():
         db.session.add(new_suggestion)
         print(csv_row)
     db.session.commit()
+
+
 
     return "dasf"
 
